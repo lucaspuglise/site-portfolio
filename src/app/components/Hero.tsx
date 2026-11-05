@@ -6,7 +6,7 @@ import { useTheme } from "./theme";
 // @ts-ignore
 import portrait from "../../imports/Retrato_minimalista_de_passaporte_em_fundo_branco.png";
 // @ts-ignore
-import cvFile from "../../imports/LucasPuglise2026_CV.pdf";
+import cvFile from "../../imports/CV_Lucas_Puglise.pdf";
 
 const PAPER = "#ece9e2";
 const INK = "#080c18";
