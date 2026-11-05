@@ -11,7 +11,7 @@ import {
 } from "motion/react";
 import { SectionHeading } from "./SectionHeading";
 
-const marqueeItems = ["Python", "Banco de Dados", "Inteligência Artificial", "Web"];
+const marqueeItems = ["Python", "SQL", "Power BI", "IA"];
 
 function Marquee() {
   const reduce = useReducedMotion();
@@ -43,7 +43,7 @@ function Marquee() {
           >
             {item}
           </span>
-          <span className="h-3 w-3 rounded-full bg-signal" />
+          <span className="h-3 w-3 rounded-full bg-flame" />
         </span>
       ))}
     </div>
@@ -60,9 +60,9 @@ function Marquee() {
 }
 
 const skills = [
-  { n: "01", title: "Python", description: "Desenvolvimento de scripts, automação e análise de dados.", tag: "linguagem principal" },
-  { n: "02", title: "Estruturação de BD", description: "Modelagem relacional, queries avançadas e otimização.", tag: "dados" },
-  { n: "03", title: "Tecnologias Web", description: "Construção de interfaces e integrações com HTML, CSS e JS.", tag: "interfaces" },
+  { n: "01", title: "Python", description: "Scripts, análise de dados com Pandas, validação defensiva e gráficos com Matplotlib.", tag: "linguagem principal" },
+  { n: "02", title: "Bancos de Dados & SQL", description: "Modelagem relacional (MER/DER) e consultas com JOINs em Oracle, PostgreSQL, MySQL e SQLite.", tag: "dados" },
+  { n: "03", title: "Tecnologias Web", description: "Interfaces e integrações com HTML, CSS, JavaScript e Node.js.", tag: "interfaces" },
 ];
 
 export function Skills() {
@@ -123,11 +123,11 @@ export function Skills() {
               Foco Principal
             </span>
             <h3 className="font-display text-[clamp(3rem,8vw,7rem)] leading-[0.92]">
-              Inteligência <em>Artificial</em>
+              Dados & <em>Inteligência Artificial</em>
             </h3>
             <p className="mt-6 max-w-2xl text-base leading-relaxed text-ink/75 md:text-lg">
-              Exploração e integração de <strong className="font-semibold text-ink">IAs Generativas</strong> e{" "}
-              <strong className="font-semibold text-ink">LLMs (Large Language Models)</strong> para automação de tarefas, geração de conteúdo e criação de agentes inteligentes.
+              Do dado bruto à decisão: modelagem relacional, consultas em <strong className="font-semibold text-ink">SQL</strong>, análise com{" "}
+              <strong className="font-semibold text-ink">Pandas</strong> e dashboards em <strong className="font-semibold text-ink">Power BI</strong>, com Data Storytelling para tornar métricas compreensíveis. Tenho foco crescente em <strong className="font-semibold text-ink">Inteligência Artificial</strong>: estudo e aplico <strong className="font-semibold text-ink">IAs Generativas (LLMs e LRMs)</strong> de forma prática e útil, para automatizar tarefas, acelerar análises e evoluir sempre no tema.
             </p>
           </div>
         </motion.div>
@@ -146,7 +146,7 @@ export function Skills() {
             <span className="h-2 w-2 rounded-full bg-muted-foreground/60" /> Ambiente Linux
           </div>
           <div className="flex items-center gap-2 border border-border px-4 py-2 text-sm text-muted-foreground">
-            <span className="h-2 w-2 rounded-full bg-muted-foreground/60" /> Inglês Intermediário
+            <span className="h-2 w-2 rounded-full bg-muted-foreground/60" /> Inglês Profissional
           </div>
         </motion.div>
       </div>

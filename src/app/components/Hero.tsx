@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from "motion/react";
+import { animate, motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from "motion/react";
 import { Download, Github, Linkedin } from "lucide-react";
 import { Magnetic } from "./Magnetic";
+import { useTheme } from "./theme";
 // @ts-ignore
 import portrait from "../../imports/Retrato_minimalista_de_passaporte_em_fundo_branco.png";
 // @ts-ignore
-import cvFile from "../../imports/CV_Lucas_Puglise.pdf";
+import cvFile from "../../imports/LucasPuglise2026_CV.pdf";
 
 const PAPER = "#ece9e2";
 const INK = "#080c18";
@@ -18,10 +19,10 @@ const BOOT = [
 ];
 
 const PINS = [
-  { n: "01", label: "Inteligência Artificial", x: 50, y: 23, side: "right", mobile: true },
+  { n: "01", label: "IA & Análise de Dados", x: 50, y: 23, side: "right", mobile: true },
   { n: "02", label: "Python", x: 54.5, y: 47, side: "right", mobile: true },
-  { n: "03", label: "Banco de Dados", x: 41, y: 58, side: "left", mobile: false },
-  { n: "04", label: "UI / UX", x: 50, y: 79, side: "right", mobile: true },
+  { n: "03", label: "SQL & Bancos de Dados", x: 41, y: 58, side: "left", mobile: false },
+  { n: "04", label: "Inteligência Artificial", x: 50, y: 79, side: "right", mobile: true },
 ] as const;
 
 const maskStyle = {
@@ -52,21 +53,30 @@ export function Hero() {
   const reduce = useReducedMotion();
   const { scrollYProgress: p } = useScroll({ target: ref, offset: ["start start", "end end"] });
 
-  const bg = useTransform(p, [0.16, 0.42], [PAPER, INK]);
-  const fg = useTransform(p, [0.16, 0.42], [INK, PAPER]);
+  // Modo escuro: "tone" força o estágio escuro do Hero independentemente do scroll
+  const { dark } = useTheme();
+  const darkMV = useMotionValue(dark ? 1 : 0);
+  useEffect(() => {
+    const c = animate(darkMV, dark ? 1 : 0, { duration: reduce ? 0 : 0.6, ease: "easeInOut" });
+    return () => c.stop();
+  }, [dark, reduce, darkMV]);
+  const tone = useTransform([p, darkMV], ([a, d]: number[]) => Math.max(a, d));
+
+  const bg = useTransform(tone, [0.16, 0.42], [PAPER, INK]);
+  const fg = useTransform(tone, [0.16, 0.42], [INK, PAPER]);
   const photoScale = useTransform(p, [0, 1], [1, 1.18]);
-  const multiplyOpacity = useTransform(p, [0.14, 0.34], [1, 0]);
-  const negativeOpacity = useTransform(p, [0.2, 0.42], [0, 1]);
-  const toneFilter = useTransform(p, [0.05, 0.3], ["grayscale(0) contrast(1)", "grayscale(1) contrast(1.15)"]);
+  const multiplyOpacity = useTransform(tone, [0.14, 0.34], [1, 0]);
+  const negativeOpacity = useTransform(tone, [0.2, 0.42], [0, 1]);
+  const toneFilter = useTransform(tone, [0.05, 0.3], ["grayscale(0) contrast(1)", "grayscale(1) contrast(1.15)"]);
   const lucasX = useTransform(p, [0, 1], ["0vw", "-12vw"]);
   const puglX = useTransform(p, [0, 1], ["0vw", "12vw"]);
   const pinsOpacity = useTransform(p, [0.03, 0.1, 0.2, 0.3], [0, 1, 1, 0]);
   const scanOpacity = useTransform(p, [0.15, 0.3], [1, 0]);
-  const stampOpacity = useTransform(p, [0.4, 0.5], [0, 1]);
-  const stampScale = useTransform(p, [0.4, 0.55], [1.45, 1]);
+  const stampOpacity = useTransform(p, [0.2, 0.3], [0, 1]);
+  const stampScale = useTransform(p, [0.2, 0.32], [1.45, 1]);
   const cueOpacity = useTransform(p, [0, 0.12], [1, 0]);
   const ringsOpacity = useTransform(p, [0.3, 0.6], [1, 0.35]);
-  const vignette = useTransform(p, [0, 0.4], [1, 0]);
+  const vignette = useTransform(tone, [0, 0.4], [1, 0]);
 
   const [step, setStep] = useState(reduce ? 3 : 0);
   useEffect(() => {
@@ -125,7 +135,7 @@ export function Hero() {
         </motion.div>
         <motion.div
           style={{ x: puglX }}
-          className="absolute left-[20vw] top-[25vh] md:bottom-[5vh] md:left-auto md:right-[3vw] md:top-auto"
+          className="absolute left-[20vw] top-[25vh] z-[6] md:bottom-[5vh] md:left-auto md:right-[3vw] md:top-auto"
         >
           <RevealWord
             text="Puglise"
@@ -207,14 +217,14 @@ export function Hero() {
                 className={`absolute ${pin.mobile ? "" : "hidden md:block"}`}
                 style={{ left: `${pin.x}%`, top: `${pin.y}%` }}
               >
-                <span className="absolute -left-1 -top-1 h-2 w-2 rounded-full bg-signal ring-4 ring-signal/25" />
+                <span className="absolute -left-1 -top-1 h-2 w-2 rounded-full bg-flame ring-4 ring-flame/25" />
                 <span className={`absolute top-0 h-px w-10 bg-current/60 md:w-24 ${pin.side === "right" ? "left-2" : "right-2"}`} />
                 <span
                   className={`absolute -top-5 whitespace-nowrap font-mono text-[9px] uppercase tracking-[0.14em] md:text-[11px] ${
                     pin.side === "right" ? "left-2 md:left-3" : "right-2 md:right-3"
                   }`}
                 >
-                  <span className="text-signal">{pin.n}</span> {pin.label}
+                  <span className="text-flame">{pin.n}</span> {pin.label}
                 </span>
               </motion.div>
             ))}
@@ -247,14 +257,14 @@ export function Hero() {
 
         {/* Intro + actions */}
         <div className="absolute bottom-4 left-4 right-4 z-20 border border-paper/25 bg-ink p-4 text-paper shadow-[0_18px_40px_-18px_rgba(8,12,24,0.6)] md:bottom-[5vh] md:left-[4vw] md:right-auto md:max-w-sm md:p-5">
-          <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.18em] text-paper/80">Ciência da Computação · CEUB · 2029</p>
+          <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.18em] text-paper/80">Ciência da Computação · CEUB · Buscando estágio</p>
           <motion.p
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.1, duration: 0.8, ease }}
             className="font-display text-lg leading-snug md:text-[1.6rem]"
           >
-            Estudante de Ciência da Computação focado em <em>Python</em>, <em>Banco de Dados</em> e <em>Inteligência Artificial</em>.
+            Estudante de Ciência da Computação focado em <em>Dados</em>, <em>Python</em> e <em>IA</em>.
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -266,7 +276,7 @@ export function Hero() {
               <motion.a
                 href={cvFile}
                 download="LucasPuglise_CV.pdf"
-                className="inline-flex items-center gap-2 bg-paper px-5 py-3 text-sm font-semibold text-ink transition-colors hover:bg-signal"
+                className="inline-flex items-center gap-2 bg-paper px-5 py-3 text-sm font-semibold text-ink transition-colors hover:bg-signal hover:text-white"
               >
                 <Download size={16} /> Baixar Currículo
               </motion.a>
@@ -276,7 +286,7 @@ export function Hero() {
               target="_blank"
               rel="noreferrer"
               aria-label="LinkedIn de Lucas Puglise"
-              className="grid h-11 w-11 place-items-center border border-paper/50 text-paper transition-colors hover:border-signal hover:text-signal"
+              className="grid h-11 w-11 place-items-center border border-paper/50 text-paper transition-colors hover:border-flame hover:text-flame"
             >
               <Linkedin size={17} />
             </a>
@@ -285,7 +295,7 @@ export function Hero() {
               target="_blank"
               rel="noreferrer"
               aria-label="GitHub de Lucas Puglise"
-              className="grid h-11 w-11 place-items-center border border-paper/50 text-paper transition-colors hover:border-signal hover:text-signal"
+              className="grid h-11 w-11 place-items-center border border-paper/50 text-paper transition-colors hover:border-flame hover:text-flame"
             >
               <Github size={17} />
             </a>
@@ -304,14 +314,14 @@ export function Hero() {
         {/* Cursor scanner */}
         {showScan && (
           <motion.div style={{ opacity: scanOpacity }} className="pointer-events-none absolute inset-0 z-30" aria-hidden="true">
-            <motion.span style={{ y: sy }} className="absolute left-0 right-0 top-0 h-px bg-signal/30" />
-            <motion.span style={{ x: sx }} className="absolute bottom-0 left-0 top-0 w-px bg-signal/30" />
+            <motion.span style={{ y: sy }} className="absolute left-0 right-0 top-0 h-px bg-flame/30" />
+            <motion.span style={{ x: sx }} className="absolute bottom-0 left-0 top-0 w-px bg-flame/30" />
             <motion.div style={{ x: rx, y: ry }} className="absolute left-0 top-0 h-14 w-14">
-              <span className="absolute inset-0 rounded-full border border-signal/80" />
-              <span className="absolute left-1/2 top-[-8px] h-[72px] w-px bg-signal/70" />
-              <span className="absolute left-[-8px] top-1/2 h-px w-[72px] bg-signal/70" />
+              <span className="absolute inset-0 rounded-full border border-flame/80" />
+              <span className="absolute left-1/2 top-[-8px] h-[72px] w-px bg-flame/70" />
+              <span className="absolute left-[-8px] top-1/2 h-px w-[72px] bg-flame/70" />
             </motion.div>
-            <motion.span style={{ x: tx, y: ty }} className="absolute left-0 top-0 font-mono text-[10px] text-signal">
+            <motion.span style={{ x: tx, y: ty }} className="absolute left-0 top-0 font-mono text-[10px] text-flame">
               {readout}
             </motion.span>
           </motion.div>

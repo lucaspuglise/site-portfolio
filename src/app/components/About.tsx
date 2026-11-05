@@ -3,9 +3,9 @@ import { motion, useScroll, useTransform, type MotionValue } from "motion/react"
 import { SectionHeading } from "./SectionHeading";
 
 const lead =
-  "Sou estudante do **2º semestre de Ciência da Computação no CEUB**, interessado em transformar dados e boas perguntas em produtos úteis. Venho aprofundando Python, estruturação de bancos de dados e Inteligência Artificial para construir soluções claras, eficientes e centradas em pessoas.";
+  "Estudante de **Ciência da Computação no CEUB**, com forte perfil analítico e foco em **Engenharia e Análise de Dados**. Tenho experiência prática em todo o ciclo dos dados: da modelagem estrutural em SQL à visualização de métricas, sempre buscando transformar informação bruta em soluções estratégicas. Tenho grande interesse em **Inteligência Artificial** e estudo o tema de forma contínua, aplicando-a de maneira prática e útil.";
 
-type Token = { w: string; strong: boolean };
+type Token = { w: string; strong: boolean; glue?: boolean };
 
 function Word({ t, i, n, p }: { t: Token; i: number; n: number; p: MotionValue<number> }) {
   const opacity = useTransform(p, [i / n, (i + 1) / n], [0.16, 1]);
@@ -19,14 +19,21 @@ function Word({ t, i, n, p }: { t: Token; i: number; n: number; p: MotionValue<n
 function ScrollWords({ text }: { text: string }) {
   const ref = useRef<HTMLParagraphElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.85", "end 0.5"] });
-  const tokens: Token[] = text
-    .split("**")
-    .flatMap((seg, i) => seg.split(" ").filter(Boolean).map((w) => ({ w, strong: i % 2 === 1 })));
+  const segs = text.split("**");
+  const tokens: Token[] = segs
+    .flatMap((seg, i) =>
+      seg
+        .split(" ")
+        .filter(Boolean)
+        // só cola quando não há espaço dos dois lados da fronteira (ex.: vírgula após destaque)
+        .map((w, j) => ({ w, strong: i % 2 === 1, glue: j === 0 && i > 0 && !seg.startsWith(" ") && !segs[i - 1].endsWith(" ") })),
+    );
   return (
     <p ref={ref} className="relative font-display text-[clamp(1.9rem,3.6vw,3.4rem)] leading-[1.12] text-foreground">
       {tokens.map((t, i) => (
         <Fragment key={i}>
-          <Word t={t} i={i} n={tokens.length} p={scrollYProgress} />{" "}
+          <Word t={t} i={i} n={tokens.length} p={scrollYProgress} />
+          {!tokens[i + 1]?.glue && " "}
         </Fragment>
       ))}
     </p>
@@ -34,14 +41,14 @@ function ScrollWords({ text }: { text: string }) {
 }
 
 const facts = [
-  { n: "01", label: "Formação", main: "Ciência da Computação", sub: "2º sem · CEUB · até dez/2029" },
-  { n: "02", label: "Idiomas", rows: [["Português", "nativo"], ["Inglês", "B1"]] },
-  { n: "03", label: "Perfil", main: "Educador Social Voluntário", sub: "Escuta ativa · comunicação acessível · relatórios" },
+  { n: "01", label: "Formação", main: "Ciência da Computação", sub: "CEUB · fev/2026 – dez/2029 (previsto)" },
+  { n: "02", label: "Idiomas", rows: [["Português", "nativo"], ["Inglês", "profissional"]] },
+  { n: "03", label: "Perfil", main: "Educador Social Voluntário", sub: "Análise de dados · relatórios · Data Storytelling" },
 ] as const;
 
 export function About() {
   return (
-    <section id="sobre-mim" className="relative z-10 -mt-[50vh] border-t border-border bg-background pb-28 pt-20 md:pb-40 md:pt-28">
+    <section id="sobre-mim" className="relative z-10 -mt-[75vh] border-t border-border bg-background pb-28 pt-12 md:pb-40 md:pt-16">
       <div className="mx-auto max-w-7xl px-6 md:px-12">
         <SectionHeading index="01" label="Sobre mim" lines={["Lógica de máquina,", <em key="e">ouvido de gente.</em>]} />
 
@@ -55,9 +62,10 @@ export function About() {
               transition={{ duration: 0.8 }}
               className="mt-12 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg"
             >
-              Além de linhas de código, acredito no poder da comunicação e da empatia. Como{" "}
-              <strong className="font-semibold text-foreground">Educador Social Voluntário</strong>, desenvolvi escuta ativa, elaboração de relatórios e a habilidade de{" "}
-              <strong className="font-semibold text-foreground">traduzir informações complexas de forma clara e acessível</strong> — conectando o mundo lógico da tecnologia a necessidades reais.
+              Combino raciocínio lógico, aprendizado rápido e comunicação clara (Data Storytelling) para traduzir desafios técnicos em resultados compreensíveis. Como{" "}
+              <strong className="font-semibold text-foreground">Educador Social Voluntário</strong>, analisei o desempenho de alunos e elaborei relatórios para diferentes públicos. Estudo para a certificação{" "}
+              <strong className="font-semibold text-foreground">Microsoft Power BI (PL-300)</strong>, concluí o <strong className="font-semibold text-foreground">Solve It with SQL (Oracle APEX)</strong> e fui aprovado até a fase final do processo seletivo de Estágio em Data Science na{" "}
+              <strong className="font-semibold text-foreground">Ouvidoria-Geral da União (OGU)</strong>, ainda no primeiro semestre. Uso IAs Generativas (LLMs e LRMs) no dia a dia para aprender mais rápido, automatizar tarefas e validar ideias, e busco evoluir sempre nesse campo. Procuro uma oportunidade de estágio para gerar impacto real, trabalhando em equipe.
             </motion.p>
           </div>
 

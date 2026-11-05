@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { Menu, X } from "lucide-react";
+import { Menu, Moon, Sun, X } from "lucide-react";
+import { useTheme } from "./theme";
 
 const navLinks = [
   { name: "Sobre", href: "#sobre-mim", id: "sobre-mim" },
@@ -12,6 +13,11 @@ const navLinks = [
 export function Navbar() {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState("");
+  const { dark, toggle } = useTheme();
+  // Hero ainda claro (topo da página, modo claro): o logotipo precisa de tinta escura
+  const [atTop, setAtTop] = useState(true);
+  const [scrolled, setScrolled] = useState(false);
+  const onLight = atTop && !dark;
 
   useEffect(() => {
     const ids = ["inicio", ...navLinks.map((l) => l.id)];
@@ -28,9 +34,12 @@ export function Navbar() {
       if (el) io.observe(el);
     });
     const onScroll = () => {
+      setAtTop(window.scrollY < window.innerHeight * 0.3);
+      setScrolled(window.scrollY > window.innerHeight * 0.3);
       if (window.innerHeight + window.scrollY >= document.body.scrollHeight - 4) setActive("contato");
     };
     window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
     return () => {
       io.disconnect();
       window.removeEventListener("scroll", onScroll);
@@ -40,9 +49,18 @@ export function Navbar() {
   return (
     <>
       <nav className="pointer-events-none fixed left-0 right-0 top-0 z-50 text-paper">
+        {/* Véu suave atrás do logotipo quando o conteúdo rola por baixo (sem caixa) */}
+        <div aria-hidden="true" className={`absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-background via-background/70 to-transparent transition-opacity duration-500 ${scrolled && !onLight ? "opacity-100" : "opacity-0"}`} />
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 md:px-12 md:py-6">
-          <a href="#inicio" className="pointer-events-auto border border-paper/20 bg-ink px-4 py-2.5 font-display text-2xl italic leading-none tracking-[-0.02em] shadow-lg shadow-black/20 focus-visible:outline-2 focus-visible:outline-signal">
-            LPC.
+          <a
+            href="#inicio"
+            aria-label="Lucas Puglise de Carvalho, início"
+            className="pointer-events-auto group relative flex items-baseline font-display text-[2rem] italic leading-none tracking-[-0.03em] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-signal"
+          >
+            <span className={`transition-colors duration-500 ${onLight ? "text-ink" : "text-white"}`}>LP</span>
+            <span className={`transition-all duration-500 group-hover:-translate-y-0.5 ${onLight ? "text-[#2f5fe0]" : "text-signal"}`}>C</span>
+            <span className="inline-block origin-bottom text-flame transition-transform duration-300 group-hover:scale-150">.</span>
+            <span className="absolute -bottom-1.5 left-0 h-px w-0 bg-gradient-to-r from-signal to-flame transition-all duration-500 group-hover:w-full" />
           </a>
 
           <div className="pointer-events-auto hidden items-center gap-8 border border-paper/20 bg-ink px-6 py-3 shadow-lg shadow-black/20 md:flex">
@@ -56,6 +74,17 @@ export function Navbar() {
               </a>
             ))}
           </div>
+
+          <button
+            type="button"
+            onClick={toggle}
+            aria-pressed={dark}
+            aria-label={dark ? "Desativar modo escuro" : "Ativar modo escuro"}
+            title={dark ? "Modo claro" : "Modo escuro"}
+            className="pointer-events-auto ml-auto mr-3 grid h-11 w-11 place-items-center border border-paper/20 bg-ink text-paper transition-colors hover:border-signal hover:text-signal focus-visible:outline-2 focus-visible:outline-signal md:ml-0 md:mr-0"
+          >
+            {dark ? <Sun size={18} /> : <Moon size={18} />}
+          </button>
 
           <button
             aria-label={open ? "Fechar menu" : "Abrir menu"}

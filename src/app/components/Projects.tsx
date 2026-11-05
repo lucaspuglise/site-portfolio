@@ -68,12 +68,12 @@ function Pipeline() {
 const projects: Project[] = [
   {
     id: "01",
-    kicker: "Mobilidade urbana + IA",
+    kicker: "Cidades inteligentes + dados",
     badge: "City intelligence",
     title: "CitySync",
     description:
-      "Aplicativo de inteligência urbana para monitorar tráfego e densidade populacional em tempo real. Usa IA para antecipar gargalos e sugerir rotas que tornam o deslocamento mais fluido.",
-    tags: ["Python", "Machine Learning", "PostgreSQL", "React"],
+      "Aplicação em Python que cruza dados de lotação, trânsito e clima, com validação defensiva (try/except) para garantir a qualidade da informação vinda de sensores IoT. Interface prototipada no Figma.",
+    tags: ["Python", "IoT", "Validação de dados", "Figma"],
     image: citySyncImage,
     alt: "Interface do aplicativo CitySync em um celular",
     bg: "bg-[#15152a]",
@@ -89,12 +89,12 @@ const projects: Project[] = [
   },
   {
     id: "02",
-    kicker: "Python + banco de dados local",
+    kicker: "Python + SQLite",
     badge: "Finance OS",
     title: "FinanControl",
     description:
-      "Sistema de controle financeiro pessoal em Python, com interface gráfica e banco de dados local. Organiza receitas, despesas e metas, oferecendo relatórios e gráficos para acompanhar cada decisão financeira.",
-    tags: ["Python", "GUI", "SQLite", "Relatórios", "Gráficos"],
+      "Sistema em Python com SQLite para organizar finanças pessoais. Implementa relatórios e gráficos com Matplotlib que transformam lançamentos em informação visual.",
+    tags: ["Python", "SQLite", "Matplotlib", "Relatórios"],
     image: finanControlImage,
     alt: "Painel principal do FinanControl com indicadores financeiros e gráfico de despesas",
     bg: "bg-[#e7e9ed]",
@@ -103,12 +103,12 @@ const projects: Project[] = [
   },
   {
     id: "03",
-    kicker: "Web Full-Stack · autenticação",
+    kicker: "Node.js + PostgreSQL · autenticação",
     badge: "Auth system",
     title: "Site-Login",
     description:
-      "Sistema de login funcional e responsivo, criado para aplicar os fundamentos do desenvolvimento Web Full-Stack: da concepção da interface visual (Frontend) à estruturação do servidor e do banco de dados (Backend).",
-    tags: ["Full-Stack", "Frontend", "Backend", "Banco de dados", "Responsivo", "Autenticação"],
+      "Sistema web de login em Node.js integrado ao PostgreSQL via ORM Sequelize, que valida credenciais em um banco de dados real e mantém a persistência das informações, do frontend ao backend.",
+    tags: ["Node.js", "PostgreSQL", "Sequelize", "Full-Stack", "Autenticação"],
     image: loginImage,
     alt: "Tela de login com campos de e-mail e senha sobre um céu estrelado",
     bg: "bg-[#07162b]",
@@ -150,7 +150,7 @@ function Media({ p, total }: { p: Project; total: number }) {
         style={{ x: lx, y: ly }}
         animate={{ opacity: hover ? 1 : 0, scale: hover ? 1 : 0.6 }}
         transition={{ duration: 0.2 }}
-        className="pointer-events-none absolute left-0 top-0 hidden rounded-full bg-signal px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-ink md:block"
+        className="pointer-events-none absolute left-0 top-0 hidden rounded-full bg-flame px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-ink md:block"
       >
         Ver repo ↗
       </motion.span>
@@ -226,7 +226,7 @@ export function Projects() {
       <div className="mx-auto max-w-7xl px-6 md:px-12">
         <SectionHeading index="03" label="Projetos" lines={["Ideias em", <em key="e">movimento.</em>]} />
         <p className="-mt-8 mb-20 max-w-md text-sm leading-relaxed text-muted-foreground md:-mt-12">
-          Produtos que exploram dados, automação e interfaces para tornar informação complexa mais legível.
+          Projetos que cobrem o ciclo dos dados: modelagem, consulta, validação e visualização.
         </p>
         <div className="grid gap-24 md:gap-32">
           {projects.map((p, i) => (
